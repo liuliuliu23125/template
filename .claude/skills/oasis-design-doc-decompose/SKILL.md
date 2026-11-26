@@ -115,7 +115,7 @@ agent_created: true
 | --- | --- | --- | --- |
 | **决策 gate**（重） | `01-understand.md`、`03-plan.md` 产出后 | 判断方向对不对 | 2 次/需求 |
 | **验收 gate**（轻） | 每个 **L1** 任务完成 | 看改动清单 + 证据 | 只数 L1，通常 4-8 次 |
-| **自检 gate**（不打断） | 每个任务内部，agent 自己跑 luacheck / 日志检查 | —— | 每任务 1 次 |
+| **自检 gate**（不打断） | 每个任务内部，agent 自己跑 luacheck / 契约检查 / 日志检查 | —— | 每任务 1 次 |
 
 每个需要 gate 的文件末尾固定：
 
@@ -217,7 +217,7 @@ agent 规则：
 7. **配置决策**（必须死结论，不准"可能需要"）：复用现有 DataTable/DA/Lua Config / 扩表 / 新建，三选一 + 一句理由。写明路径、主键、字段、导表来源（编辑器导入 / 维护者 CSV）、谁读。**生成物（注册表/常量/索引）不手改**；重生成标为人工/工具链依赖
 8. **网络决策**：复用还是新增，明确 `UGCGenericMessageSystem` 远程消息 / `UGCAttributeSystem` 属性复制 / 工程内事件总线 三者的选择；列消息名、字段、权威端、失败与错误提示怎么落地。工程内部事件不能替代跨端同步
 9. **风险点**：运行期硬规则（封禁 API、UObject 有效性、容器 1 基、C++ 默认参数、Shipping `totable`、重连丢 RPC、`IsServer` 依赖 GameState 初始化、客户端拿不到全量 PlayerState）、目标工程硬规则（UI 门面、事件总线、玩家数据存储、分层单向依赖，如 Withdraw 的 `Global_UISystem`/`UGCEventSystem`/`PlayerDataCore`）、`require` 与 `UGCRequire` 的选择（要发布到资源商店的模块用后者）、性能预算、模板/扩展包不可改
-10. **任务清单**：按 `references/granularity.md` 拆，标 L0/L1 + **五要素**（含 `来源: fp-xxx`，这是 §6 变更同步的枢纽）
+10. **任务清单**：按 `references/granularity.md` 拆，标 L0/L1 + **五要素**（含 `来源: fp-xxx`，这是 §6 变更同步的枢纽）；验收方式要写明适用的 L2 检查（UI/场景/API/配置表）
 11. **人工前置项**：新增/修改 UMG、DataTable/DA 的 RowStruct/列/行、场景 Actor 摆放、`.ugcproj` 配置，都由人在编辑器完成。任务清单里标 `前置: 人工`，未完成前保持 `未开始`，不得进入 Phase C；Agent 只写这些内容之下的 Lua 行为
 
 调研若可并行，仅在 Phase B 分头扫（UI / 配置 / 网络 / 资产），之后全部串行。
@@ -245,6 +245,20 @@ agent 规则：
 - 错误行形如 `[os.execute], <文件>, [Ln 3, Col 3]`，逐条修，不要带着错误交差。
 - 该检查只覆盖封禁 API / 语法等静态项，**不能替代运行验证**。
 
+**契约检查（L2，按改动类型追加）**：
+
+| 改动类型 | 命令 | 通过标准 |
+|---|---|---|
+| UI / UMG | `python -I spec/tools/ui_contract.py check --project "ShadowTrackerExtra/UGCProjects/<工程名>/Script" <工程名> --store "ShadowTrackerExtra/UGCStoreAssets" Store --out spec/ui-contracts` | 无新增未声明控件引用；资产缺失逐条人工确认 |
+| 场景 / 地图 | `python -I spec/tools/scene_contract.py check --project "ShadowTrackerExtra/UGCProjects/<工程名>/Script" <工程名> --map-dir "ShadowTrackerExtra/UGCProjects/<工程名>" --asset-dir "ShadowTrackerExtra/UGCProjects/<工程名>/Asset" --out spec/scene-contracts` | 无新增问题 |
+| API 调用 | `python -I spec/tools/api_contract.py --project "ShadowTrackerExtra/UGCProjects/<工程名>/Script" --out spec/api-contracts` | 无错误；警告逐条判断 |
+| 配置表 / DA | 无专用契约脚本：人工核对 RowStruct/列/行与 `GetTableData*` 调用（后者由 `api_contract.py` 覆盖签名），运行期用日志/读表验证 | 人工核对记录 + 运行证据 |
+| spec 结构 | `python -I spec/tools/spec_check.py` | 退出码 0 |
+
+- UI/场景首次接入某个工程时，先 `--write-baseline --yes` 固化历史问题，之后只阻断新增。
+- 只改了 Lua 且不涉及 UI/场景/API 时，可只跑 `luacheck` + `spec_check`；改动了对应层就必须跑对应检查。
+- 检查命令与参数说明见 `spec/tools/` 下各 README。
+
 **运行验证（有证据才算完成）**：
 
 - 在编辑器打开 `<PROJECT>/<工程名>.ugcproj` 跑 PIE，取 `Saved/Logs/<工程名>/Clientlog/LuaLog`、`DSlog/FullLog` 与主日志；确认无 `LuaException`，关键路径有预期日志。
@@ -262,7 +276,7 @@ agent 规则：
 
 **本流程止于 Phase C。** 拆解与实现由本 skill 负责；测试用例是**独立动作**，需要时另起，不接在流程尾部、也不由本 skill gate。
 
-**需求完成的判据**：所有 **L1 任务**的验收 gate 已确认、`luacheck` 证据齐全（`logs/luacheck-NN.txt` 无错误）、运行证据或明确的人工验证记录齐全、`04-impl/` 记录完整。
+**需求完成的判据**：所有 **L1 任务**的验收 gate 已确认、`luacheck` 证据齐全（`logs/luacheck-NN.txt` 无错误）、对应 L2 契约检查无新增问题（UI/场景/API）、运行证据或明确的人工验证记录齐全、`04-impl/` 记录完整。
 
 ---
 

@@ -75,6 +75,18 @@ Phase B 必须把这些写进 `03-plan.md`，标成 `前置: 人工`；人完成
 
 ### 3.1 每次改动都要跑的检查
 
+规则定义在 `ShadowTrackerExtra/UGCProjects/AGENTS.md` 的 §配置与表格 / §UI 契约 / §场景契约；下表是工作流里的执行入口。
+
+| 改动内容 | 检查 | 通过标准 |
+|---|---|---|
+| 配置表 / DA | 无专用脚本：人工核对 RowStruct/列/行；`api_contract.py` 覆盖 `GetTableData*` 调用签名；运行期读表日志 | 人工核对记录 + 运行证据 |
+| UMG / UI | `ui_contract.py`：UMG 资源变了先 `index`，再 `check` | 无新增未声明控件；资产缺失逐条人工确认 |
+| 场景 / 地图 | `scene_contract.py`：地图摆放变了先 `index`，再 `check` | 无新增问题 |
+| API 调用 | `api_contract.py` | 无错误；警告逐条判断 |
+| spec 结构 | `spec_check.py` | 退出码 0 |
+
+具体命令：
+
 ```bash
 # spec 结构、任务来源、FP 交叉引用；gate 前必跑
 python -I spec/tools/spec_check.py
