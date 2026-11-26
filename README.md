@@ -1,7 +1,7 @@
 # Oasis UGC Agent 工作流模板
 
 > 给「绿洲启元 UGC 编辑器」安装目录使用的 Agent 指令与工作流模板。
-> 包含 `AGENTS.md` 指令链、各级 `Docs/` 文档、需求拆解 skill 与 spec 检查工具；不含编辑器二进制、打包资产和任何玩法工程内容。
+> 包含 `AGENTS.md` 指令链、各级 `Docs/`、Withdraw 工程与包级 README、需求拆解 skill 与 spec 检查工具；不含编辑器二进制、打包资产和玩法代码。
 
 ## 这是什么
 
@@ -9,12 +9,13 @@
 
 - 每一级目录有一份 `AGENTS.md`，告诉 Agent 这个目录是什么、什么能改、下一步该读哪份文档。
 - 一个需求拆解 skill，把腾讯文档拆成有 gate、有指纹、可追溯的 `spec/<模块>/` 任务。
+- 一套工程内文档：Withdraw 的 AutoTestKit、各 Package、UI/GM 的 README，说明模块职责与用法。
 - 一组离线检查工具，覆盖 UI 控件、场景 Actor、API 签名、spec 结构，以及 PIE 自动运行。
 
 ## 不是什么
 
 - 不是编辑器安装包：`Engine/`、`Content/Paks/`、`Binaries/` 等一个都没有。
-- 不是可运行工程：没有 `uasset` / `umap` / `navmesh`，`ShadowTrackerExtra/UGCProjects/Withdraw/` 只有一份 AGENTS 示例。
+- 不是可运行工程：没有 `uasset` / `umap` / `navmesh`，也没有 Withdraw 的 Lua 代码；`ShadowTrackerExtra/UGCProjects/Withdraw/` 只保留 AGENTS 与各 Package/Core/UI 的 README。
 - 不是生成物仓库：`spec/ui-contracts/`、`spec/scene-contracts/`、`spec/api-contracts/`、`spec/pie-runs/` 均由工具在本地生成，不入库；文档里对 `spec/*/INDEX.md`、`CHECK-REPORT.md` 的引用需要在本地跑一次工具后才会出现。
 - 文档带版本痕迹：`Docs/` 与 `LuaHelper/Docs/` 记录的是当前编辑器版本（1.39）的 API 与行为，升级后需要按新版本校对。
 
@@ -74,6 +75,8 @@ skill 按「返工代价」排序风险：**需求理解错 > 方案选错 > 实
 | `.claude/skills/oasis-design-doc-decompose/` | 腾讯文档 → 分步任务的完整 skill：Phase A 理解、Phase B 方案、Phase C 实现、C2 变更同步、gate 规则、读取脚本 |
 | `spec/INDEX.md` | 文档注册表模板：腾讯文档链接 → spec 目录 → 进度。首次拆解必须登记，否则变更同步查不到 |
 | `spec/tools/` | 5 个检查/自动化工具及各自 README（见上表） |
+| `ShadowTrackerExtra/SpeedupSync/luacheck/check.json` | Lua 静态检查配置：封禁函数清单、文件后缀、白名单 |
+| `ShadowTrackerExtra/Plugins/UGCEditor/Resources/LuaCheck/x64/check.json` | 编辑器侧 LuaCheck 的同款配置 |
 
 ### 被引用的文档（AGENTS 的事实来源）
 
@@ -86,6 +89,7 @@ skill 按「返工代价」排序风险：**需求理解错 > 方案选错 > 实
 | `ShadowTrackerExtra/Plugins/UniExtend/Docs/dsl.md` | Python DSL 协议与各领域包 |
 | `ShadowTrackerExtra/Plugins/UGCEditor/Resources/Skills/ugc-vfx-gen/` | VFX 生成技能与 pitfalls，被 UGCEditor AGENTS 要求先读 |
 | `ShadowTrackerExtra/Plugins/UniExtend/Resources/UGCAskQ/OpenCode/Config/AGENTS.md` | 编辑器内 AI 助手工作区的说明 |
+| `ShadowTrackerExtra/UGCProjects/Withdraw/Script/` 下的 `README.md` 与 `gamemode/readme.txt` | 工程内文档：AutoTestKit、AttributeSystem、Building、Collect、CountDown、Encumbrance、ItemSystem、MakeUp、MapProgression、Player、Shield、SkillSystem、Task、Teleport、UI/GM |
 
 ### 域边界（只放 AGENTS.md，不放内容）
 
@@ -100,9 +104,9 @@ skill 按「返工代价」排序风险：**需求理解错 > 方案选错 > 实
 
 ### 未包含（运行时或生成物）
 
-- 任何 `uasset` / `umap` / `pak` / 可执行文件、Navmesh、工程资产，以及 `LuaHelper/Source` 的 `---@meta` 存根与 `UGCProjects` 示例代码。`Docs/` 里指向这些文件的相对链接需要在实际安装中存在。
+- 任何 `uasset` / `umap` / `pak` / 可执行文件、Navmesh、工程资产，以及 `LuaHelper/Source` 的 `---@meta` 存根与 `UGCProjects` 的 Lua 代码（Withdraw 只带 README，不带 Script 代码）。`Docs/` 里指向这些文件的相对链接需要在实际安装中存在。
 - 工具生成物：`spec/ui-contracts/`、`spec/scene-contracts/`、`spec/api-contracts/`、`spec/pie-runs/`、`spec/CHECK-REPORT.md`。文档里对这些路径的引用属于“跑完工具后产生”，不是模板缺文件。
-- 编辑器插件自带的二进制资源与其他未在 AGENTS 中引用的第三方文件。
+- 编辑器插件自带的二进制资源与其他未在 AGENTS 中引用的第三方文件；`luacheck.exe` 等工具二进制随编辑器分发，模板只带配置。
 
 ## 使用方式
 
@@ -121,6 +125,7 @@ skill 按「返工代价」排序风险：**需求理解错 > 方案选错 > 实
 | `scene_contract.py` | 目标工程 `Script/`、`Asset/`、`.umap` 所在目录 |
 | `api_contract.py` | 编辑器生成的 `Saved/UGCResourceDaemon/ApiMetadataCache.json` |
 | `pie_runner.py` | 编辑器已启动、MCP Server 运行（端口读 `UGCSettings.ini` 的 `[AskQMCPServer]`）；首次 PIE 可能需人工人脸识别 |
+| Lua 静态检查 | 编辑器自带的 `luacheck.exe`；配置见 `SpeedupSync/luacheck/check.json` 与 `Resources/LuaCheck/x64/check.json` |
 | skill 的 reader 脚本 | Python 3 + Playwright + 系统 Chrome，按 `scripts/requirements.txt` 安装 |
 
 所有 Python 脚本建议用 `python -I` 运行，避免当前目录的 `json.py` 之类文件劫持导入。
@@ -152,6 +157,7 @@ skill 按「返工代价」排序风险：**需求理解错 > 方案选错 > 实
 ├── 安卓/AGENTS.md
 └── ShadowTrackerExtra/
     ├── AGENTS.md
+    ├── SpeedupSync/luacheck/check.json
     ├── Content/
     │   ├── AGENTS.md
     │   └── LuaHelper/
@@ -163,6 +169,7 @@ skill 按「返工代价」排序风险：**需求理解错 > 方案选错 > 实
     │   ├── UGCEditor/
     │   │   ├── AGENTS.md
     │   │   ├── Docs/mcp.md、toolchain.md
+    │   │   ├── Resources/LuaCheck/x64/check.json
     │   │   └── Resources/Skills/ugc-vfx-gen/
     │   └── UniExtend/
     │       ├── AGENTS.md
@@ -171,5 +178,7 @@ skill 按「返工代价」排序风险：**需求理解错 > 方案选错 > 实
     └── UGCProjects/
         ├── AGENTS.md
         ├── Docs/*.md
-        └── Withdraw/AGENTS.md
+        └── Withdraw/
+            ├── AGENTS.md
+            └── Script/{Core/AutoTestKit,Package/*,UI/GM}/README.md
 ```
