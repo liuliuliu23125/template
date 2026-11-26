@@ -218,6 +218,7 @@ agent 规则：
 8. **网络决策**：复用还是新增，明确 `UGCGenericMessageSystem` 远程消息 / `UGCAttributeSystem` 属性复制 / 工程内事件总线 三者的选择；列消息名、字段、权威端、失败与错误提示怎么落地。工程内部事件不能替代跨端同步
 9. **风险点**：运行期硬规则（封禁 API、UObject 有效性、容器 1 基、C++ 默认参数、Shipping `totable`、重连丢 RPC、`IsServer` 依赖 GameState 初始化、客户端拿不到全量 PlayerState）、目标工程硬规则（UI 门面、事件总线、玩家数据存储、分层单向依赖，如 Withdraw 的 `Global_UISystem`/`UGCEventSystem`/`PlayerDataCore`）、`require` 与 `UGCRequire` 的选择（要发布到资源商店的模块用后者）、性能预算、模板/扩展包不可改
 10. **任务清单**：按 `references/granularity.md` 拆，标 L0/L1 + **五要素**（含 `来源: fp-xxx`，这是 §6 变更同步的枢纽）
+11. **人工前置项**：新增/修改 UMG、DataTable/DA 的 RowStruct/列/行、场景 Actor 摆放、`.ugcproj` 配置，都由人在编辑器完成。任务清单里标 `前置: 人工`，未完成前保持 `未开始`，不得进入 Phase C；Agent 只写这些内容之下的 Lua 行为
 
 调研若可并行，仅在 Phase B 分头扫（UI / 配置 / 网络 / 资产），之后全部串行。
 
