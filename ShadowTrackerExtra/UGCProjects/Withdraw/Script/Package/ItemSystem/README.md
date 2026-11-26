@@ -19,8 +19,8 @@ ItemSystem 是物品配置与玩家物品数量的唯一公共入口。业务模
 
 ## 物品 ID 常量
 
-跨模块共享的物品 ID 位于 `Script/Const/Generate/Const_Item.lua`，由 GenKit
-生成，不属于包内可变数据。业务统一通过局部变量引用：
+跨模块共享的物品 ID 位于 `Script/Const/Generate/Const_Item.lua`，由维护者
+用生成流程更新，不属于包内可变数据。业务统一通过局部变量引用：
 
 ```lua
 local ItemID = require("Script.Const.Generate.Const_Item")
@@ -29,8 +29,4 @@ Registry_ItemSystem.GetItemCount(pc, ItemID.GOLD)
 
 `Util_EnumManager.ItemID` 仅兼容旧调用，并引用同一张常量表。
 保留历史成员大小写，`FlareGun` 已按 Withdraw 物品表纠正为 `5069`。
-常量源 CSV 保留在 `E:/Project/AgentHelper/WithDrawCache/ProjectCache/ItemConstants/Item/DT_Item_Config.csv`，
-初始数据从 Withdraw 的实际物品表导出。后续使用 TestHelper 的 GenKit 表常量
-生成器；确认目标项目为 Withdraw、CSV 根目录为外部缓存中的
-`E:/Project/AgentHelper/WithDrawCache/ProjectCache/ItemConstants`，并使用 `nameCase = "preserve"`。
-临时生成脚本已删除，勿使用其他项目的 CSV 覆盖本项目常量。
+常量源 CSV 与生成流程由维护者管理，生成物不手改；不要用其他项目的 CSV 覆盖本项目常量。

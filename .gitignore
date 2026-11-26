@@ -1,0 +1,22 @@
+# 运行时/生成物
+Saved/
+Intermediate/
+DerivedDataCache/
+__pycache__/
+spec/pie-runs/
+spec/api-contracts/
+spec/scene-contracts/
+spec/ui-contracts/
+spec/ui-contracts-strict/
+spec/CHECK-REPORT.md
+
+# 本地配置与临时文件
+.mcp.json
+*.log
+*.bak
+*.tmp
+Thumbnail.png
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

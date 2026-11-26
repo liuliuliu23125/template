@@ -78,6 +78,18 @@ skill 按「返工代价」排序风险：**需求理解错 > 方案选错 > 实
 | `ShadowTrackerExtra/SpeedupSync/luacheck/check.json` | Lua 静态检查配置：封禁函数清单、文件后缀、白名单 |
 | `ShadowTrackerExtra/Plugins/UGCEditor/Resources/LuaCheck/x64/check.json` | 编辑器侧 LuaCheck 的同款配置 |
 
+### 配置模板（可直接照抄，按工程改）
+
+| 路径 | 内容 |
+|---|---|
+| `ShadowTrackerExtra/UGCProjects/Withdraw/.emmyrc.json` | EmmyLua 诊断配置：关闭噪声规则、`workspace.library` 指向 `LuaHelper/Source` |
+| `ShadowTrackerExtra/UGCProjects/Withdraw/Script/luahelper.json` | LuaHelper/EmmyLua 工程配置：忽略模块、文件变量、注解规则 |
+| `ShadowTrackerExtra/UGCProjects/Withdraw/workspace.code-workspace` | 已脱敏的工作区示例：只保留工程目录与 `LuaHelper`，去掉个人路径与私有目录 |
+| `ShadowTrackerExtra/Plugins/UniExtend/Resources/UGCAskQ/OpenCode/Config/ugcaskq.json` | 编辑器 AI 助手的默认供应商/模型配置（无密钥） |
+| `ShadowTrackerExtra/Plugins/UGCEditor/Resources/LuaDebugTool/Install_Visx.{bat,py}` | 注册 EmmyLua VS Code 扩展的脚本 |
+| `ShadowTrackerExtra/UGCProjects/Withdraw/.gitignore` | 工程级忽略示例：IDE、日志、`Thumbnail.png`、`.mcp.json` |
+| `.gitignore`（仓库根） | 安装目录通用忽略规则：`Saved/`、`Intermediate/`、`spec` 生成物、缓存 |
+
 ### 被引用的文档（AGENTS 的事实来源）
 
 | 路径 | 内容 |
@@ -104,15 +116,15 @@ skill 按「返工代价」排序风险：**需求理解错 > 方案选错 > 实
 
 ### 未包含（运行时或生成物）
 
-- 任何 `uasset` / `umap` / `pak` / 可执行文件、Navmesh、工程资产，以及 `LuaHelper/Source` 的 `---@meta` 存根与 `UGCProjects` 的 Lua 代码（Withdraw 只带 README，不带 Script 代码）。`Docs/` 里指向这些文件的相对链接需要在实际安装中存在。
-- 工具生成物：`spec/ui-contracts/`、`spec/scene-contracts/`、`spec/api-contracts/`、`spec/pie-runs/`、`spec/CHECK-REPORT.md`。文档里对这些路径的引用属于“跑完工具后产生”，不是模板缺文件。
+- 任何 `uasset` / `umap` / `pak` / 可执行文件、Navmesh、工程资产，以及 `LuaHelper/Source` 的 `---@meta` 存根与 `UGCProjects` 的 Lua 代码（Withdraw 只带文档与配置模板，不带 Script 代码）。`Docs/` 里指向这些文件的相对链接需要在实际安装中存在。
+- 工具生成物：`spec/ui-contracts/`、`spec/scene-contracts/`、`spec/api-contracts/`、`spec/pie-runs/`、`spec/CHECK-REPORT.md`。文档里对这些路径的引用需要在本地实际工程（含 `Asset/`、`.umap`）上重跑工具后生成，不是模板缺文件。
 - 编辑器插件自带的二进制资源与其他未在 AGENTS 中引用的第三方文件；`luacheck.exe` 等工具二进制随编辑器分发，模板只带配置。
 
 ## 使用方式
 
 1. 把仓库内容复制到编辑器安装根目录（该目录应包含 `version.txt` 与 `ShadowTrackerExtra/`）。
 2. 把 `global/AGENTS.md` 放到用户级指令位置；若客户端用 `CLAUDE.md` 加载，可另建一份内容为 `@AGENTS.md` 的指针文件。
-3. 用你的工程替换 `ShadowTrackerExtra/UGCProjects/Withdraw/AGENTS.md` 示例，或保留为参考。
+3. 用你的工程替换 `ShadowTrackerExtra/UGCProjects/Withdraw/AGENTS.md` 示例，或保留为参考；`.emmyrc.json`、`luahelper.json`、`workspace.code-workspace` 按你的工程路径调整。
 4. 首次拆解腾讯文档时，在 `spec/INDEX.md` 登记一行，再按 skill 的 Phase A/B/C 推进。
 5. 每批改动后按需运行 `spec/tools/` 下对应检查；UI/场景检查首次接入某个工程时，用 `--write-baseline --yes` 固化历史问题。
 
@@ -143,6 +155,7 @@ skill 按「返工代价」排序风险：**需求理解错 > 方案选错 > 实
 .
 ├── AGENTS.md
 ├── README.md
+├── .gitignore
 ├── global/AGENTS.md
 ├── .claude/skills/oasis-design-doc-decompose/
 ├── Docs/layout-and-launch.md
@@ -170,15 +183,21 @@ skill 按「返工代价」排序风险：**需求理解错 > 方案选错 > 实
     │   │   ├── AGENTS.md
     │   │   ├── Docs/mcp.md、toolchain.md
     │   │   ├── Resources/LuaCheck/x64/check.json
+    │   │   ├── Resources/LuaDebugTool/Install_Visx.{bat,py}
     │   │   └── Resources/Skills/ugc-vfx-gen/
     │   └── UniExtend/
     │       ├── AGENTS.md
     │       ├── Docs/dsl.md
-    │       └── Resources/UGCAskQ/OpenCode/Config/AGENTS.md
+    │       └── Resources/UGCAskQ/OpenCode/Config/{AGENTS.md,ugcaskq.json}
     └── UGCProjects/
         ├── AGENTS.md
         ├── Docs/*.md
         └── Withdraw/
             ├── AGENTS.md
-            └── Script/{Core/AutoTestKit,Package/*,UI/GM}/README.md
+            ├── .emmyrc.json
+            ├── .gitignore
+            ├── workspace.code-workspace
+            └── Script/
+                ├── luahelper.json
+                └── {Core/AutoTestKit,Package/*,UI/GM}/README.md
 ```

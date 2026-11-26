@@ -23,18 +23,18 @@ Script/Config/AutoTestSuite/
 └── Suite_Durability.lua
 
 Script/Setting/
-└── AutoTestSuiteIndex.lua  # GenKit 自动生成
+└── AutoTestSuiteIndex.lua  # 自动生成
 ```
 
 - `Global_AutoTestKit` 是唯一公共入口。
 - `System_AutoTestKit` 转发测试操作。
 - `TestManager` 管理 Suite 注册、任务队列、Tick 和结果。
 - `TAssert` 是 Suite 中可直接使用的全局断言工具。
-- `AutoTestSuiteIndex` 是 GenKit 生成的运行时 Suite 索引，不手工维护。
+- `AutoTestSuiteIndex` 是自动生成的运行时 Suite 索引，不手工维护。
 
 ## 当前测试
 
-Withdraw 当前包含虚拟物品、健身房升级、制作、收藏、经验升级和耐久测试 Suite。Suite 由 GenKit 自动生成索引，运行时不会扫描磁盘。
+Withdraw 当前包含虚拟物品、健身房升级、制作、收藏、经验升级和耐久测试 Suite。Suite 索引由生成流程自动更新，运行时不会扫描磁盘。
 
 ## 公共接口
 
@@ -57,10 +57,10 @@ PlayerController 同时提供 `Server_RunAutoTest_ByCase` 和 `Server_StopAutoTe
 ## 新增 Suite
 
 1. 在 `Script/Config/AutoTestSuite` 或其子目录创建 `.lua` 文件，并 `return` 一个包含 `name` 和 `cases` 的表。
-2. 运行 GenKit 的“生成 AutoTestSuite 索引”工具，更新 `Script/Setting/AutoTestSuiteIndex.lua`。
+2. 运行项目的“生成 AutoTestSuite 索引”流程，更新 `Script/Setting/AutoTestSuiteIndex.lua`。
 3. Case 的 `run` 函数返回 `TAssert` 结果；未显式返回时，TestManager 使用最后一次断言结果。
 
-游戏运行时不会扫描磁盘。新增、移动或删除 Suite 后必须重新运行 GenKit，生成文件不要手动编辑。
+游戏运行时不会扫描磁盘。新增、移动或删除 Suite 后必须重新生成索引，生成文件不要手动编辑。
 
 ```lua
 return {

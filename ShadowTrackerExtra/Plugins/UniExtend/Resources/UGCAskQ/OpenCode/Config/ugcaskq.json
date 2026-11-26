@@ -1,0 +1,247 @@
+{
+  "provider": {
+    "codebuddy": {
+      "name": "CodeBuddy",
+      "npm": "@ai-sdk/openai-compatible",
+      "api": "https://copilot.tencent.com/v2",
+      "models": {
+        "claude-opus-4.7": {
+          "name": "Claude-Opus-4.7 (CodeBuddy)",
+          "tool_call": true,
+          "reasoning": false,
+          "attachment": true,
+          "temperature": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
+          "limit": {
+            "context": 200000,
+            "output": 65536
+          },
+          "cost": {
+            "input": 3,
+            "output": 15
+          }
+        },
+        "claude-opus-4.7-1m": {
+          "name": "Claude-Opus-4.7(1M context) (CodeBuddy)",
+          "tool_call": true,
+          "reasoning": false,
+          "attachment": true,
+          "temperature": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
+          "limit": {
+            "context": 1000000,
+            "output": 65536
+          },
+          "cost": {
+            "input": 3,
+            "output": 15
+          }
+        },
+        "claude-sonnet-4.6": {
+          "name": "Claude-Sonnet-4.6 (CodeBuddy)",
+          "tool_call": true,
+          "reasoning": false,
+          "attachment": true,
+          "temperature": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
+          "limit": {
+            "context": 200000,
+            "output": 65536
+          },
+          "cost": {
+            "input": 3,
+            "output": 15
+          }
+        },
+        "claude-opus-4.6": {
+          "name": "Claude-Opus-4.6 (CodeBuddy)",
+          "tool_call": true,
+          "reasoning": false,
+          "attachment": true,
+          "temperature": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
+          "limit": {
+            "context": 200000,
+            "output": 65536
+          },
+          "cost": {
+            "input": 15,
+            "output": 75
+          },
+          "variants": {
+            "low": {
+              "reasoningEffort": "low",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "claude-haiku-4.5": {
+          "name": "Claude-Haiku-4.5 (CodeBuddy)",
+          "tool_call": true,
+          "reasoning": false,
+          "attachment": true,
+          "temperature": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
+          "limit": {
+            "context": 200000,
+            "output": 65536
+          },
+          "cost": {
+            "input": 0.8,
+            "output": 4
+          }
+        },
+        "gemini-3.1-pro": {
+          "name": "Gemini-3.1-Pro (CodeBuddy)",
+          "tool_call": true,
+          "reasoning": false,
+          "attachment": true,
+          "temperature": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
+          "limit": {
+            "context": 1000000,
+            "output": 65536
+          },
+          "variants": {
+            "low": {
+              "reasoningEffort": "low",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "gemini-3.0-flash": {
+          "name": "Gemini-3.0-Flash (CodeBuddy)",
+          "tool_call": true,
+          "reasoning": false,
+          "attachment": true,
+          "temperature": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
+          "limit": {
+            "context": 1000000,
+            "output": 65536
+          }
+        },
+        "gpt-5.4": {
+          "name": "GPT-5.4 (CodeBuddy)",
+          "tool_call": true,
+          "reasoning": false,
+          "attachment": true,
+          "temperature": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
+          "limit": {
+            "context": 400000,
+            "output": 128000
+          }
+        },
+        "gpt-5.3-codex": {
+          "name": "GPT-5.3-Codex (CodeBuddy)",
+          "tool_call": true,
+          "reasoning": false,
+          "attachment": true,
+          "temperature": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
+          "limit": {
+            "context": 400000,
+            "output": 128000
+          }
+        },
+        "kimi-k2-thinking": {
+          "name": "Kimi-K2-Thinking (CodeBuddy)",
+          "tool_call": true,
+          "reasoning": false,
+          "attachment": false,
+          "temperature": true,
+          "limit": {
+            "context": 128000,
+            "output": 32768
+          },
+          "variants": {
+            "low": {
+              "reasoningEffort": "low",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "kimi-k2.5-ioa": {
+          "name": "Kimi-K2.5 (CodeBuddy)",
+          "tool_call": true,
+          "reasoning": false,
+          "attachment": true,
+          "temperature": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
+          "limit": {
+            "context": 128000,
+            "output": 32768
+          }
+        },
+        "glm-5.1-ioa": {
+          "name": "GLM-5.1 (CodeBuddy)",
+          "tool_call": true,
+          "reasoning": true,
+          "attachment": false,
+          "temperature": true,
+          "limit": {
+            "context": 200000,
+            "output": 32768
+          }
+        },
+        "deepseek-v3-2-volc-ioa": {
+          "name": "DeepSeek-V3.2 (CodeBuddy)",
+          "tool_call": true,
+          "reasoning": false,
+          "attachment": false,
+          "temperature": true,
+          "limit": {
+            "context": 128000,
+            "output": 32768
+          }
+        }
+      }
+    }
+  },
+  "plugin": [
+    "./plugins/opencode-codebuddy-auth.js"
+  ]
+}

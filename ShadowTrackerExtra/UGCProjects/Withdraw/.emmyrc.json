@@ -1,0 +1,33 @@
+{
+  "diagnostics": {
+    "disable": [
+      "need-check-nil",
+      "undefined-global",
+      "undefined-field",
+      "annotation-usage-error"
+    ],
+    "enable": true,
+    "globals": [
+      "ugcprint",
+      "LuaQuickFireEvent"
+    ]
+  },
+  "runtime": {
+    "requirePattern": [
+      "Script/?(.+)"
+    ]
+  },
+  "workspace": {
+    "ignoreDir": [
+      ".vscode",
+      ".git",
+      "Asset",
+      "Navmesh",
+      "ExtendResource",
+      "__pycache__"
+    ],
+    "library": [
+      "../../Content/LuaHelper/Source"
+    ]
+  }
+}
