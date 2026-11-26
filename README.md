@@ -1,7 +1,7 @@
 # Oasis UGC Agent 工作流模板
 
 > 给「绿洲启元 UGC 编辑器」安装目录使用的 Agent 指令与工作流模板。
-> 只包含 `AGENTS.md` 指令链、需求拆解 skill、spec 检查工具，不含编辑器二进制、打包资产和任何玩法工程内容。
+> 包含 `AGENTS.md` 指令链、各级 `Docs/` 文档、需求拆解 skill 与 spec 检查工具；不含编辑器二进制、打包资产和任何玩法工程内容。
 
 ## 这是什么
 
@@ -15,8 +15,8 @@
 
 - 不是编辑器安装包：`Engine/`、`Content/Paks/`、`Binaries/` 等一个都没有。
 - 不是可运行工程：没有 `uasset` / `umap` / `navmesh`，`ShadowTrackerExtra/UGCProjects/Withdraw/` 只有一份 AGENTS 示例。
-- 不是文档全集：AGENTS 里引用的 `Docs/*.md` 未随模板提供，需要从自己的安装补齐或另行维护。
-- 不是生成物仓库：`spec/ui-contracts/`、`spec/scene-contracts/`、`spec/api-contracts/`、`spec/pie-runs/` 均由工具在本地生成，不入库。
+- 不是生成物仓库：`spec/ui-contracts/`、`spec/scene-contracts/`、`spec/api-contracts/`、`spec/pie-runs/` 均由工具在本地生成，不入库；文档里对 `spec/*/INDEX.md`、`CHECK-REPORT.md` 的引用需要在本地跑一次工具后才会出现。
+- 文档带版本痕迹：`Docs/` 与 `LuaHelper/Docs/` 记录的是当前编辑器版本（1.39）的 API 与行为，升级后需要按新版本校对。
 
 ## 设计思路
 
@@ -55,9 +55,9 @@
 | `spec/tools/api_contract.py` | API 是否存在、参数个数、scope、废弃映射 | 未知 API / 参数过多 |
 | `spec/tools/pie_runner.py` | 能否自动启停 PIE、跑 AutoTestKit、抓日志/截图 | 测试失败或运行期 Lua 错误 |
 
-### 5. 模板只保留结构
+### 5. 模板只带说明，不带环境
 
-所有 `AGENTS.md` 保持与编辑器一致的相对路径。目录本身（`Engine/`、`ShadowTrackerExtra/` 等）由你的安装提供；本仓库只提供挂在对应位置上的说明文件。因此克隆后把内容覆盖到编辑器根即可，不需要改路径。
+所有 `AGENTS.md` 和 `Docs/` 保持与编辑器一致的相对路径。目录本身（`Engine/`、`ShadowTrackerExtra/` 等）与运行时内容由你的安装提供；本仓库只提供挂在对应位置上的说明与文档。因此克隆后把内容覆盖到编辑器根即可，不需要改路径；缺失的链接按 `Docs/` 的现有布局就能对上。
 
 ### 6. 需求拆解用 gate 控风险，而不是均匀确认
 
@@ -75,6 +75,18 @@ skill 按「返工代价」排序风险：**需求理解错 > 方案选错 > 实
 | `spec/INDEX.md` | 文档注册表模板：腾讯文档链接 → spec 目录 → 进度。首次拆解必须登记，否则变更同步查不到 |
 | `spec/tools/` | 5 个检查/自动化工具及各自 README（见上表） |
 
+### 被引用的文档（AGENTS 的事实来源）
+
+| 路径 | 内容 |
+|---|---|
+| `Docs/layout-and-launch.md` | 顶层目录、启动/更新链路、只读产物 |
+| `ShadowTrackerExtra/UGCProjects/Docs/` | 工程引导、网络复制、调试、性能、运行期硬规则、发布清单、模板、1.39 增量、wiki 导航 |
+| `ShadowTrackerExtra/Content/LuaHelper/Docs/` | 77 个 API 库分类速查，以及角色/怪物/技能/背包/UI/载具/场景等专题 |
+| `ShadowTrackerExtra/Plugins/UGCEditor/Docs/` | MCP 接入（Streamable HTTP、端口以配置为准）、UEP/工具链总览 |
+| `ShadowTrackerExtra/Plugins/UniExtend/Docs/dsl.md` | Python DSL 协议与各领域包 |
+| `ShadowTrackerExtra/Plugins/UGCEditor/Resources/Skills/ugc-vfx-gen/` | VFX 生成技能与 pitfalls，被 UGCEditor AGENTS 要求先读 |
+| `ShadowTrackerExtra/Plugins/UniExtend/Resources/UGCAskQ/OpenCode/Config/AGENTS.md` | 编辑器内 AI 助手工作区的说明 |
+
 ### 域边界（只放 AGENTS.md，不放内容）
 
 | 路径 | 说明 |
@@ -86,11 +98,11 @@ skill 按「返工代价」排序风险：**需求理解错 > 方案选错 > 实
 | `ShadowTrackerExtra/UGCProjects/Withdraw/AGENTS.md` | 一个完整工程的 AGENTS 示例：分层、初始化顺序、生成物、硬约束。替换成你自己的工程即可 |
 | `Engine/`、`TCLS/`、`WeGameLauncher/`、`rail_files/`、`tiny_cache/`、`安卓/`、`FeaturePacks/` | 只读/发布侧目录的边界说明，防止 Agent 误写 |
 
-### 未包含、需要自行补齐
+### 未包含（运行时或生成物）
 
-- `Docs/*.md`：`AGENTS.md` 中引用的项目文档，如 `UGCProjects/Docs/runtime-rules.md`、`Content/LuaHelper/Docs/api-index.md`。模板保留链接，内容由你的安装/团队维护。
-- 任何 `uasset` / `umap` / `pak` / 可执行文件。
-- 工具生成物：`spec/ui-contracts/`、`spec/scene-contracts/`、`spec/api-contracts/`、`spec/pie-runs/`、`spec/CHECK-REPORT.md`。
+- 任何 `uasset` / `umap` / `pak` / 可执行文件、Navmesh、工程资产，以及 `LuaHelper/Source` 的 `---@meta` 存根与 `UGCProjects` 示例代码。`Docs/` 里指向这些文件的相对链接需要在实际安装中存在。
+- 工具生成物：`spec/ui-contracts/`、`spec/scene-contracts/`、`spec/api-contracts/`、`spec/pie-runs/`、`spec/CHECK-REPORT.md`。文档里对这些路径的引用属于“跑完工具后产生”，不是模板缺文件。
+- 编辑器插件自带的二进制资源与其他未在 AGENTS 中引用的第三方文件。
 
 ## 使用方式
 
@@ -128,6 +140,7 @@ skill 按「返工代价」排序风险：**需求理解错 > 方案选错 > 实
 ├── README.md
 ├── global/AGENTS.md
 ├── .claude/skills/oasis-design-doc-decompose/
+├── Docs/layout-and-launch.md
 ├── spec/INDEX.md
 ├── spec/tools/
 ├── Engine/AGENTS.md
@@ -139,13 +152,24 @@ skill 按「返工代价」排序风险：**需求理解错 > 方案选错 > 实
 ├── 安卓/AGENTS.md
 └── ShadowTrackerExtra/
     ├── AGENTS.md
-    ├── Content/AGENTS.md
-    ├── Content/LuaHelper/AGENTS.md
-    ├── Content/LuaHelper/Source/AGENTS.md
-    ├── Plugins/AGENTS.md
-    ├── Plugins/UGCEditor/AGENTS.md
-    ├── Plugins/UniExtend/AGENTS.md
+    ├── Content/
+    │   ├── AGENTS.md
+    │   └── LuaHelper/
+    │       ├── AGENTS.md
+    │       ├── Docs/*.md
+    │       └── Source/AGENTS.md
+    ├── Plugins/
+    │   ├── AGENTS.md
+    │   ├── UGCEditor/
+    │   │   ├── AGENTS.md
+    │   │   ├── Docs/mcp.md、toolchain.md
+    │   │   └── Resources/Skills/ugc-vfx-gen/
+    │   └── UniExtend/
+    │       ├── AGENTS.md
+    │       ├── Docs/dsl.md
+    │       └── Resources/UGCAskQ/OpenCode/Config/AGENTS.md
     └── UGCProjects/
         ├── AGENTS.md
+        ├── Docs/*.md
         └── Withdraw/AGENTS.md
 ```
